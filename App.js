@@ -17,31 +17,12 @@ import CuratedPhotos from './app/screens/CuratedPhotos';
 import PopularPhoto from './app/screens/PopularPhoto';
 import {IndicatorViewPager, PagerDotIndicator} from 'rn-viewpager';
 
-const instructions = Platform.select({
-    ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-    android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
 const {width, height} = Dimensions.get('window');
 type Props = {};
 export default class App extends Component<Props> {
     render() {
         return (
-            <IndicatorViewPager
-                style={{height:height}}
-                indicator={this._renderDotIndicator()}
-            >
-                <View>
-                    <RandomPhotos/>
-                </View>
-                <View>
-                    <CuratedPhotos/>
-                </View>
-                <View>
-                    <PopularPhoto/>
-                </View>
-            </IndicatorViewPager>
+            <RandomPhotos/>
         );
     }
 

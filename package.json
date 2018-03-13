@@ -9,6 +9,8 @@
   "dependencies": {
     "react": "16.2.0",
     "react-native": "0.53.3",
+    "react-native-wallpaper-manager": "^0.3.16",
+    "react-navigation": "^1.2.1",
     "rn-viewpager": "^1.2.9"
   },
   "devDependencies": {
