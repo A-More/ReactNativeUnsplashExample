@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {ImageBackground, Text, View, StyleSheet, Button} from 'react-native';
+import {ImageBackground, Text, View, StyleSheet, Button, TouchableOpacity} from 'react-native';
 import api from '../api/randomresource/RandomResource';
-import wallpaperManager from 'react-native-wallpaper-manager';
+import wall from 'react-native-wallpaper-manager';
+import RNFetchBlob from 'react-native-fetch-blob';
 
 export default class RandomPhotos extends Component {
 
@@ -9,6 +10,7 @@ export default class RandomPhotos extends Component {
         super(props);
         this.state = {
             random: "",
+            name: "",
         }
     }
 
@@ -17,31 +19,47 @@ export default class RandomPhotos extends Component {
             .then((res) => {
                 this.setState({
                     random: res.urls.regular,
+                    name: res.user.name,
                 });
             })
     }
 
-    setWallpaper = () => {
-        // show loading
-        // sencond parameter is a callback when done setting wallpaper
-        wallpaperManager.setWallpaper({uri: this.state.random}, (res)=>{console.log("set")});
+    applyWallpaper = () => {
+        wall.setWallpaper({uri: this.state.random}, (res) => {
+            console.log("set")
+        });
         console.log("on hold");
     }
+
+    downloadImage = () => {
+        console.log('entered');
+        let dirs = RNFetchBlob.fs.dirs;
+        RNFetchBlob
+            .config({
+                // response data will be saved to this path if it has access right.
+                path: dirs.PictureDir + '/Screenshots/' + this.state.name +'.png'
+            })
+            .fetch('GET', this.state.random, {
+                //some headers ..
+            })
+            .then((res) => {
+                //
+                // the path should be dirs.DocumentDir + 'path-to-file.anything'
+                console.log('The file saved to ', res.path())
+            })
+    };
 
     render() {
         return (
             <View>
-                <ImageBackground style={{width: '100%', height: '100%'}} source={{uri: this.state.random}}
-                onLongPress={this.setWallpaper}>
-                    <View style={styles.options}>
-                        <Button title='set wallpaper' style={{width: 50, height: 50, alignSelf: 'center'}}
-                                onPress={() => {
-                                    console.log("on click");
-                                }}
-                                onLongPress={}
-                        />
-                    </View>
-                </ImageBackground>
+                <TouchableOpacity onPress={this.downloadImage}
+                                  onLongPress={this.applyWallpaper}
+                >
+                    <ImageBackground style={{width: '100%', height: '100%'}} source={{uri: this.state.random}}
+                    >
+                        <Text style={styles.options}>{this.state.name}</Text>
+                    </ImageBackground>
+                </TouchableOpacity>
             </View>
         );
     }
@@ -50,10 +68,10 @@ export default class RandomPhotos extends Component {
 const styles = StyleSheet.create({
     options: {
         // flexDirection:'row',
-        justifyContent:'center',
-        height: '15%',
+        justifyContent: 'flex-start',
         backgroundColor: '#000000',
-        opacity:0.5,
+        opacity: 0.5,
+
         // alignSelf: 'flex-end',
         // position: 'absolute',
     }
