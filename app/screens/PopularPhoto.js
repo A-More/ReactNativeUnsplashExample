@@ -9,16 +9,31 @@ export default class PopularPhoto extends Component {
         super(props);
         this.state = {
             curated: [],
+            page:1,
         }
     }
 
+
     componentDidMount() {
-        popularResource.getPopular()
+        this.getPopularPhotos();
+    }
+
+    getPopularPhotos = () => {
+        console.log("Current page" + this.state.page)
+        popularResource.getPopular(this.state.page)
             .then((res) => {
                 this.setState({
-                    curated: res,
+                    curated: [...this.state.curated, ...res],
                 })
             })
+    }
+
+    loadMore = () => {
+        this.setState({
+            page: this.state.page + 1
+        }, () => {
+            this.getPopularPhotos();
+        })
     }
 
     render() {
@@ -32,6 +47,8 @@ export default class PopularPhoto extends Component {
                           renderItem={({item}) => {
                               return <PopularItem row={item}/>
                           }}
+                          onEndReached={this.loadMore}
+                          onEndThreshold={7}
                 />
             </View>
         )

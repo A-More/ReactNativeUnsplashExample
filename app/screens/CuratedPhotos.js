@@ -8,16 +8,29 @@ export default class CuratedPhotos extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            page: 1,
             curated: [],
         }
     }
 
     componentDidMount() {
-        curatedResource.getCurated()
+
+    }
+
+    getCuratedPhotos = () => {
+        curatedResource.getCurated(this.state.page)
             .then((res) => {
                 this.setState({
-                    curated: res,
+                    curated: [...this.state.curated, ...res],
                 })
+            })
+    }
+
+    loadMore = () => {
+        this.setState({
+                page: this.state.page + 1
+            }, () => {
+                this.getCuratedPhotos();
             })
     }
 
@@ -32,6 +45,8 @@ export default class CuratedPhotos extends Component {
                           renderItem={({item}) => {
                               return <CuratedItem row={item}/>
                           }}
+                          onEndReached={this.loadMore}
+                          onEndThreshold={7}
                 />
             </View>
         )

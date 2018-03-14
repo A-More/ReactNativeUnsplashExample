@@ -15,6 +15,7 @@ import {
 import RandomPhotos from './app/screens/RandomPhotos'
 import CuratedPhotos from './app/screens/CuratedPhotos';
 import PopularPhoto from './app/screens/PopularPhoto';
+
 import {IndicatorViewPager, PagerDotIndicator} from 'rn-viewpager';
 
 const {width, height} = Dimensions.get('window');

@@ -14,7 +14,24 @@ export default class RandomPhotos extends Component {
         }
     }
 
+
+    //use setTimeout for tutorial
+
     componentDidMount() {
+
+        this.getRandomPhoto();
+        this._interval = setInterval(() => {
+            // Your code
+            // this.getRandomPhoto();   //uncomment this
+        }, 5000);
+    }
+
+
+    componentWillUnmount() {
+        clearInterval(this._interval);
+    }
+
+    getRandomPhoto = () => {
         api.getRandom()
             .then((res) => {
                 this.setState({
@@ -37,7 +54,7 @@ export default class RandomPhotos extends Component {
         RNFetchBlob
             .config({
                 // response data will be saved to this path if it has access right.
-                path: dirs.PictureDir + '/Screenshots/' + this.state.name +'.png'
+                path: dirs.PictureDir + '/Screenshots/' + this.state.name + '.png'
             })
             .fetch('GET', this.state.random, {
                 //some headers ..
@@ -53,26 +70,47 @@ export default class RandomPhotos extends Component {
         return (
             <View>
                 <TouchableOpacity onPress={this.downloadImage}
-                                  onLongPress={this.applyWallpaper}
-                >
-                    <ImageBackground style={{width: '100%', height: '100%'}} source={{uri: this.state.random}}
-                    >
-                        <Text style={styles.options}>{this.state.name}</Text>
+                                  onLongPress={this.applyWallpaper}>
+                    <ImageBackground style={styles.image} source={{uri: this.state.random}}>
+                        <View style={styles.hintContainer}>
+                            <Text style={styles.tutorial}>Click to download</Text>
+                            <Text style={styles.tutorial}>Hold to set as Wallpaper</Text>
+                        </View>
                     </ImageBackground>
                 </TouchableOpacity>
+                <Text style={styles.option}>{this.state.name}</Text>
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    image: {
+        width: '100%', height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     options: {
-        // flexDirection:'row',
-        justifyContent: 'flex-start',
         backgroundColor: '#000000',
         opacity: 0.5,
-
         // alignSelf: 'flex-end',
-        // position: 'absolute',
+        position: 'absolute',
+        bottom: 0,
+    },
+    tutorial: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: 'white',
+        textAlign: 'center',
+    },
+    hintContainer: {
+        backgroundColor: '#000000',
+        opacity: 0.5,
+        borderWidth: 2,
+        borderColor: 'white',
+        margin: '15%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20,
     }
 });

@@ -9,7 +9,6 @@ export default class CuratedItem extends Component {
         console.log("curated Item", this.props.row.urls.small);
         return (
             <TouchableOpacity style={styles.container}
-
             >
                 <Image style={styles.image} source={{uri: this.props.row.urls.regular}}/>
             </TouchableOpacity>
