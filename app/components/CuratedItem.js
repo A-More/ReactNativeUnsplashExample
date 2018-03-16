@@ -7,8 +7,12 @@ export default class CuratedItem extends Component {
 
     render() {
         console.log("curated Item", this.props.row.urls.small);
+        const{navigation}=this.props;
         return (
             <TouchableOpacity style={styles.container}
+                              onPress={() => {
+                                navigation.navigate('ImageScreen', this.props.row.urls.regular)
+                              }}
             >
                 <Image style={styles.image} source={{uri: this.props.row.urls.regular}}/>
             </TouchableOpacity>

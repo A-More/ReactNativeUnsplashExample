@@ -35,6 +35,7 @@ export default class CuratedPhotos extends Component {
     }
 
     render() {
+        // const{navigation}=this.props;
         return (
             <View style={styles.container}>
                 <FlatList style={styles.list}
@@ -43,7 +44,7 @@ export default class CuratedPhotos extends Component {
                               return item.id;
                           }}
                           renderItem={({item}) => {
-                              return <CuratedItem row={item}/>
+                              return <CuratedItem row={item} navigation={this.props.navigation}/>
                           }}
                           onEndReached={this.loadMore}
                           onEndThreshold={7}

@@ -6,7 +6,7 @@ export default class ImageScreen extends Component {
     constructor(props) {
         super(props);
         this.state={
-            uri:"",
+            url:this.props.navigation.state.params,
         }
     }
 

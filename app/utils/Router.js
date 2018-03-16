@@ -1,15 +1,24 @@
 import {StackNavigator} from 'react-navigation';
 import RandomPhotos from "../screens/RandomPhotos";
 import CuratedPhotos from "../screens/CuratedPhotos";
+import Home from "../screens/Home"
 import CuratedItem from'../components/CuratedItem';
-export const chacha = StackNavigator({
-    Nouman:{
+import ImageScreen from '../screens/ImageScreen'
+
+export const Router = StackNavigator({
+    Home:{
+        screen: Home,
+    },
+    Random:{
         screen:RandomPhotos,
     },
-    Srivastav:{
+    Curated:{
         screen:CuratedPhotos,
     },
-    Nishant:{
+    CuratedItem:{
         screen:CuratedItem,
     },
+    ImageScreen:{
+        screen:ImageScreen,
+    }
 })

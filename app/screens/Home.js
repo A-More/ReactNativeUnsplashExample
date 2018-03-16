@@ -3,14 +3,16 @@ import {
     View,
     Dimensions,
 } from 'react-native';
-import RandomPhotos from './RandomPhotos '
+import RandomPhotos from './RandomPhotos'
 import CuratedPhotos from './CuratedPhotos';
 import PopularPhoto from './PopularPhoto';
 import {IndicatorViewPager, PagerDotIndicator} from 'rn-viewpager';
 
 const {height} = Dimensions.get('window');
 export default class Home extends Component {
-
+    static navigationOptions = {
+        header: null,
+    };
     render() {
         return (
             <IndicatorViewPager
@@ -21,10 +23,10 @@ export default class Home extends Component {
                     <RandomPhotos/>
                 </View>
                 <View>
-                    <CuratedPhotos/>
+                    <CuratedPhotos navigation={this.props.navigation}/>
                 </View>
                 <View>
-                    <PopularPhoto/>
+                    <PopularPhoto navigation={this.props.navigation}/>
                 </View>
             </IndicatorViewPager>
         );
