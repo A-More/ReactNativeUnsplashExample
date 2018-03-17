@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import curatedResource from '../api/curatedresource/CuratedResource';
 import CuratedItem from '../components/CuratedItem';
+import Toast, {DURATION} from 'react-native-easy-toast';
 
 export default class CuratedPhotos extends Component {
 
@@ -14,7 +15,7 @@ export default class CuratedPhotos extends Component {
     }
 
     componentDidMount() {
-
+        this.refs.toast.show('swipe up for more', DURATION.LENGTH_SHORT);
     }
 
     getCuratedPhotos = () => {
@@ -49,6 +50,7 @@ export default class CuratedPhotos extends Component {
                           onEndReached={this.loadMore}
                           onEndThreshold={7}
                 />
+                <Toast ref="toast"/>
             </View>
         )
     }

@@ -3,6 +3,10 @@ import {Image, Text, View} from 'react-native';
 
 export default class ImageScreen extends Component {
 
+    static navigationOptions = {
+        header: null,
+    };
+
     constructor(props) {
         super(props);
         this.state={

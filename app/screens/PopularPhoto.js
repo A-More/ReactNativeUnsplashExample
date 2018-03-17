@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import popularResource from '../api/popularresource/PopularResource';
 import PopularItem from '../components/PopularItem';
+import Toast, {DURATION} from 'react-native-easy-toast';
 
 export default class PopularPhoto extends Component {
 
@@ -16,6 +17,7 @@ export default class PopularPhoto extends Component {
 
     componentDidMount() {
         this.getPopularPhotos();
+        this.refs.toast.show('swipe up for more',DURATION.FOREVER);
     }
 
     getPopularPhotos = () => {
@@ -50,6 +52,7 @@ export default class PopularPhoto extends Component {
                           onEndReached={this.loadMore}
                           onEndThreshold={7}
                 />
+                <Toast ref="toast"/>
             </View>
         )
     }

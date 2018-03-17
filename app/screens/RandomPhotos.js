@@ -12,8 +12,7 @@ import {
 import api from '../api/randomresource/RandomResource';
 import wall from 'react-native-wallpaper-manager';
 import RNFetchBlob from 'react-native-fetch-blob';
-
-const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity)
+import Toast, {DURATION} from 'react-native-easy-toast';
 
 export default class RandomPhotos extends Component {
 
@@ -24,7 +23,8 @@ export default class RandomPhotos extends Component {
             random: "",
             name: "",
             message: "",
-            fadeAnim: new Animated.Value(.5)
+            fadeAnim: new Animated.Value(.5),
+            image: null,
         }
     }
 
@@ -40,7 +40,7 @@ export default class RandomPhotos extends Component {
         Animated.timing(this.state.fadeAnim, {
             toValue: 0,
             duration: 3000,
-            delay:5000,
+            delay: 5000,
         }).start();
     }
 
@@ -61,20 +61,40 @@ export default class RandomPhotos extends Component {
                     name: res.user.name,
                     loading: false,
                 });
+                this.refs.toast.show('click to download\nhold to set wallpaper', DURATION.FOREVER);
+
+                /*fetch(this.state.random).then((res) => {
+                    this.setState({
+                        image: res,
+                    })
+                })*/
             })
     }
 
     applyWallpaper = () => {
+        this.refs.toast.show('setting wallpaper');
         wall.setWallpaper({uri: this.state.random}, (res) => {
             console.log("set")
-            this.setState({
-                message: "Wallpaper Set"
-            })
+            this.refs.toast.show('this image is now your wallpaper');
         });
+    }
+
+    onPress = () => {
+        this.refs.toast.close('hello world!', 500);
+        var delta = new Date().getTime() - this.state.lastPress;
+
+        if (delta < 200) {
+            // double tap happend
+            this.downloadImage();
+        }
+        this.setState({
+            lastPress: new Date().getTime()
+        })
     }
 
     downloadImage = () => {
         console.log('entered');
+        // this.refs.toast.show('downloading...');
         let dirs = RNFetchBlob.fs.dirs;
         RNFetchBlob
             .config({
@@ -85,7 +105,7 @@ export default class RandomPhotos extends Component {
                 //some headers ..
             })
             .then((res) => {
-
+                this.refs.toast.show('image saved');
                 // the path should be dirs.DocumentDir + 'path-to-file.anything'
                 console.log('The file saved to ', res.path())
             })
@@ -105,6 +125,8 @@ export default class RandomPhotos extends Component {
         if (this.state.loading) {
             return (
                 <View style={{
+                    width: '100%',
+                    height: '100%',
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: '#000000',
@@ -115,19 +137,19 @@ export default class RandomPhotos extends Component {
         }
         return (
             <View>
-                <TouchableOpacity onPress={this.downloadImage}
+                <TouchableOpacity onPress={this.onPress}
                                   onLongPress={this.applyWallpaper}>
                     <ImageBackground style={styles.image} source={{uri: this.state.random}}>
-                        <Animated.View style={[styles.hintContainer, {
-                            opacity: this.state.fadeAnim,
-                        }]}>
-                            <Text style={styles.tutorial}>Click to download</Text>
-                            <Text style={[styles.tutorial, {marginTop: 10}]}>Hold to set as Wallpaper</Text>
-                        </Animated.View>
-
+                        {/*<Animated.View style={[styles.hintContainer, {*/}
+                        {/*opacity: this.state.fadeAnim,*/}
+                        {/*}]}>*/}
+                        {/*<Text style={styles.tutorial}>Click to download</Text>*/}
+                        {/*<Text style={[styles.tutorial, {marginTop: 10}]}>Hold to set as Wallpaper</Text>*/}
+                        {/*</Animated.View>*/}
                     </ImageBackground>
                 </TouchableOpacity>
-                <Text style={styles.options}>{this.state.name}</Text>
+                <Text style={styles.options} opacity={0.5}>{this.state.name}</Text>
+                <Toast ref="toast"/>
             </View>
         );
     }
