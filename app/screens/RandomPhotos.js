@@ -13,7 +13,7 @@ import api from '../api/randomresource/RandomResource';
 import wall from 'react-native-wallpaper-manager';
 import RNFetchBlob from 'react-native-fetch-blob';
 import Toast, {DURATION} from 'react-native-easy-toast';
-
+let flag = 0;
 export default class RandomPhotos extends Component {
 
     constructor(props) {
@@ -35,7 +35,7 @@ export default class RandomPhotos extends Component {
         this.getRandomPhoto();
         this._interval = setInterval(() => {
             // Your code
-            // this.getRandomPhoto();   //uncomment this
+            this.getRandomPhoto();   //uncomment this
         }, 5000);
         Animated.timing(this.state.fadeAnim, {
             toValue: 0,
@@ -58,10 +58,13 @@ export default class RandomPhotos extends Component {
             .then((res) => {
                 this.setState({
                     random: res.urls.regular,
-                    name: res.user.name,
+                    name: res.user.username,
                     loading: false,
                 });
-                this.refs.toast.show('click to download\nhold to set wallpaper', DURATION.FOREVER);
+                if(flag === 0){
+                    flag = 1;
+                    this.refs.toast.show('double tap to download\nhold to set wallpaper', DURATION.FOREVER);
+                }
 
                 /*fetch(this.state.random).then((res) => {
                     this.setState({
@@ -80,7 +83,7 @@ export default class RandomPhotos extends Component {
     }
 
     onPress = () => {
-        this.refs.toast.close('hello world!', 500);
+        this.refs.toast.close(1);
         var delta = new Date().getTime() - this.state.lastPress;
 
         if (delta < 200) {
@@ -99,7 +102,8 @@ export default class RandomPhotos extends Component {
         RNFetchBlob
             .config({
                 // response data will be saved to this path if it has access right.
-                path: dirs.PictureDir + '/Screenshots/' + this.state.name + '.png'
+                path: dirs.DownloadDir +'/'+ this.state.name + '.jpg'
+                // path: dirs.PictureDir + '/Screenshots/' + this.state.name + '.png'
             })
             .fetch('GET', this.state.random, {
                 //some headers ..

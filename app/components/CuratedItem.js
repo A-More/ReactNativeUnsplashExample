@@ -2,14 +2,15 @@ import React, {Component} from 'react';
 import {Image, StyleSheet, Text, Dimensions, TouchableOpacity, Animated, ImageBackground} from 'react-native';
 import wall from 'react-native-wallpaper-manager';
 import RNFetchBlob from 'react-native-fetch-blob';
-import Toast, {DURATION} from 'react-native-easy-toast';
 
 const {height, width} = Dimensions.get('window');
+let callback ;
 
 export default class CuratedItem extends Component {
 
     constructor(props) {
         super(props)
+        callback  = this.props.callback;
         this.state = {
             name: "",
             message: "",
@@ -26,27 +27,43 @@ export default class CuratedItem extends Component {
     }
 
     applyWallpaper = () => {
-        this.refs.toast.show('setting wallpaper');
-        wall.setWallpaper({uri: this.state.random}, (res) => {
+        // this.refs.toast.show('setting wallpaper...');
+        this.props.callback(3)
+        wall.setWallpaper({uri: this.props.row.urls.regular}, (res) => {
             console.log("set")
-            this.refs.toast.show('this image is now your wallpaper');
+            // this.refs.toast.show('this image is now your wallpaper');
+            this.props.callback(4)
         });
+    }
+
+    onPress = () => {
+        var delta = new Date().getTime() - this.state.lastPress;
+
+        if (delta < 200) {
+            // double tap happend
+            this.downloadImage();
+        }
+        this.setState({
+            lastPress: new Date().getTime()
+        })
     }
 
     downloadImage = () => {
         console.log('entered');
         // this.refs.toast.show('downloading...');
+        this.props.callback(1)
         let dirs = RNFetchBlob.fs.dirs;
         RNFetchBlob
             .config({
                 // response data will be saved to this path if it has access right.
-                path: dirs.PictureDir + '/Screenshots/' + this.state.name + '.png'
+                path: dirs.DownloadDir +'/'+ this.props.row.user.username + '.jpg'
             })
-            .fetch('GET', this.state.random, {
+            .fetch('GET', this.props.row.urls.regular, {
                 //some headers ..
             })
             .then((res) => {
-                this.refs.toast.show('image saved');
+                this.props.callback(2)
+                // this.refs.toast.show('image saved');
                 // the path should be dirs.DocumentDir + 'path-to-file.anything'
                 console.log('The file saved to ', res.path())
             })
@@ -54,10 +71,9 @@ export default class CuratedItem extends Component {
 
     render() {
         console.log("curated Item", this.props.row.urls.small);
-        const {navigation} = this.props;
         return (
             <TouchableOpacity style={styles.container}
-                              onPress={this.downloadImage}
+                              onPress={this.onPress}
                               onLongPress={this.applyWallpaper}>
                 <Image style={styles.image} source={{uri: this.props.row.urls.regular}}/>
                 <Text style={styles.options}>{this.props.row.user.name}</Text>
