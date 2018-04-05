@@ -6,6 +6,12 @@ import com.facebook.react.ReactApplication;
 import com.cunyutech.hollyliu.reactnative.wallpaper.WallPaperPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.cunyutech.hollyliu.reactnative.wallpaper.WallPaperPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.cunyutech.hollyliu.reactnative.wallpaper.WallPaperPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.cunyutech.hollyliu.reactnative.wallpaper.WallPaperPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.cunyutech.hollyliu.reactnative.wallpaper.WallPaperPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -26,6 +32,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new WallPaperPackage(),
+            new RNFetchBlobPackage(),
             new WallPaperPackage(),
             new RNFetchBlobPackage()
       );

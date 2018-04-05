@@ -8,6 +8,8 @@ import {
     ActivityIndicator,
     TouchableOpacity,
     Animated,
+    Platform,
+    CameraRoll
 } from 'react-native';
 import api from '../api/randomresource/RandomResource';
 import wall from 'react-native-wallpaper-manager';
@@ -26,12 +28,13 @@ export default class RandomPhotos extends Component {
             fadeAnim: new Animated.Value(.5),
             image: null,
         }
+        console.log('inside constructor');
     }
 
 
     //use setTimeout for tutorial
     componentDidMount() {
-
+        console.log("called or not");
         this.getRandomPhoto();
         this._interval = setInterval(() => {
             // Your code
@@ -56,6 +59,10 @@ export default class RandomPhotos extends Component {
     getRandomPhoto = () => {
         api.getRandom()
             .then((res) => {
+                fetch(res.urls.regular).then((image) => {
+
+                })
+
                 this.setState({
                     random: res.urls.regular,
                     name: res.user.username,
@@ -85,7 +92,7 @@ export default class RandomPhotos extends Component {
     onPress = () => {
         this.refs.toast.close(1);
         var delta = new Date().getTime() - this.state.lastPress;
-
+        console.log('inside onPress')
         if (delta < 200) {
             // double tap happend
             this.downloadImage();
@@ -98,6 +105,7 @@ export default class RandomPhotos extends Component {
     downloadImage = () => {
         console.log('entered');
         // this.refs.toast.show('downloading...');
+        if(Platform.OS === 'android'){
         let dirs = RNFetchBlob.fs.dirs;
         RNFetchBlob
             .config({
@@ -113,6 +121,12 @@ export default class RandomPhotos extends Component {
                 // the path should be dirs.DocumentDir + 'path-to-file.anything'
                 console.log('The file saved to ', res.path())
             })
+        } else {
+            console.log('inside ios fi block')
+            CameraRoll.saveToCameraRoll(this.state.random)
+                .then(()=>{console.log('saved')})
+                .catch((error) => {console.log(error)})
+        }
     };
 
     renderImage = () => {

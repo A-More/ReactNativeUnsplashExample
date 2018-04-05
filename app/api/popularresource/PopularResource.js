@@ -9,7 +9,10 @@ var api = {
             },
         };
         return fetch(url, headers)
-            .then((res) => res.json());
+            .then((res) => res.json())
+            .catch((error) => {
+                console.log(error)
+            });
     }
 };
 module.exports = api;
