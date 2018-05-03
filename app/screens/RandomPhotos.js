@@ -59,10 +59,6 @@ export default class RandomPhotos extends Component {
     getRandomPhoto = () => {
         api.getRandom()
             .then((res) => {
-                fetch(res.urls.regular).then((image) => {
-
-                })
-
                 this.setState({
                     random: res.urls.regular,
                     name: res.user.username,
@@ -158,12 +154,11 @@ export default class RandomPhotos extends Component {
                 <TouchableOpacity onPress={this.onPress}
                                   onLongPress={this.applyWallpaper}>
                     <ImageBackground style={styles.image} source={{uri: this.state.random}}>
-                        {/*<Animated.View style={[styles.hintContainer, {*/}
-                        {/*opacity: this.state.fadeAnim,*/}
-                        {/*}]}>*/}
-                        {/*<Text style={styles.tutorial}>Click to download</Text>*/}
-                        {/*<Text style={[styles.tutorial, {marginTop: 10}]}>Hold to set as Wallpaper</Text>*/}
-                        {/*</Animated.View>*/}
+                        <Animated.View style={[styles.hintContainer, {
+                        opacity: this.state.fadeAnim,
+                        }]}>
+                        <Text style={styles.tutorial}>Random</Text>
+                        </Animated.View>
                     </ImageBackground>
                 </TouchableOpacity>
                 <Text style={styles.options} opacity={0.5}>{this.state.name}</Text>

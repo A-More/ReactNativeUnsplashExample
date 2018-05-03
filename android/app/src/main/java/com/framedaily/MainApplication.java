@@ -33,9 +33,8 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new WallPaperPackage(),
-            new RNFetchBlobPackage(),
-            new WallPaperPackage(),
             new RNFetchBlobPackage()
+
       );
     }
 
