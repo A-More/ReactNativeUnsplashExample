@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
+import {View, FlatList, StyleSheet, Animated, Text} from 'react-native';
 import curatedResource from '../api/curatedresource/CuratedResource';
 import CuratedItem from '../components/CuratedItem';
 import Toast, {DURATION} from 'react-native-easy-toast';
@@ -10,12 +10,18 @@ export default class CuratedPhotos extends Component {
         super(props);
         this.state = {
             page: 1,
+            fadeAnim: new Animated.Value(.5),
             curated: [],
         }
     }
 
     componentDidMount() {
         this.refs.toast.show('scroll up for more', DURATION.FOREVER);
+        Animated.timing(this.state.fadeAnim, {
+            toValue: 0,
+            duration: 3000,
+            delay: 5000,
+        }).start();
     }
 
     getCuratedPhotos = () => {
@@ -69,6 +75,15 @@ export default class CuratedPhotos extends Component {
                           onEndThreshold={7}
                           onScrollBeginDrag={this.onScroll}
                 />
+                <View style={{position:'absolute', width:'100%',height:'100%',alignItems:'center',justifyContent:'center'}}>
+                    <Animated.View style={[styles.hintContainer, {
+                        opacity: this.state.fadeAnim,
+                    }]}>
+                        <Text style={styles.tutorial}>Curated Photos</Text>
+                    </Animated.View>
+                </View>
+
+                {/*</FlatList>*/}
                 <Toast ref="toast"/>
             </View>
         )
@@ -85,5 +100,20 @@ const styles = StyleSheet.create({
         //  height:'100%',
         //  width:300,
         //  height:900,
+    },
+    hintContainer: {
+        backgroundColor: '#000000',
+        borderWidth: 2,
+        borderColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20,
+        width:'50%'
+    },
+    tutorial: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: 'white',
+        textAlign: 'center',
     },
 });

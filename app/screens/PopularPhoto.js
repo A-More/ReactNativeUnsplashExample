@@ -11,7 +11,7 @@ export default class PopularPhoto extends Component {
         this.state = {
             curated: [],
             page:1,
-            // fadeAnim: new Animated.Value(.5),
+            fadeAnim: new Animated.Value(.5),
         }
     }
 
@@ -19,11 +19,11 @@ export default class PopularPhoto extends Component {
     componentDidMount() {
         this.getPopularPhotos();
         this.refs.toast.show('scroll up for more',DURATION.FOREVER);
-        // Animated.timing(this.state.fadeAnim, {
-        //     toValue: 0,
-        //     duration: 3000,
-        //     delay: 5000,
-        // }).start();
+        Animated.timing(this.state.fadeAnim, {
+            toValue: 0,
+            duration: 3000,
+            delay: 5000,
+        }).start();
     }
 
     getPopularPhotos = () => {
@@ -74,13 +74,15 @@ export default class PopularPhoto extends Component {
                           onEndReached={this.loadMore}
                           onEndThreshold={7}
                           onScrollBeginDrag={this.onScroll}
-                >
+                />
+                <View style={{position:'absolute', width:'100%',height:'100%',alignItems:'center',justifyContent:'center'}}>
                 <Animated.View style={[styles.hintContainer, {
                     opacity: this.state.fadeAnim,
                 }]}>
-                    <Text style={styles.tutorial}>POPULAR</Text>
+                    <Text style={styles.tutorial}>POPULAR Photos</Text>
                 </Animated.View>
-                </FlatList>
+                </View>
+                {/*</FlatList>*/}
                 <Toast ref="toast"/>
             </View>
         )
@@ -109,10 +111,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000',
         borderWidth: 2,
         borderColor: 'white',
-        margin: '15%',
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
+        width:'50%'
     }
 
 });
