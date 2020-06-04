@@ -5,11 +5,14 @@ var api ={
         let headers={
             method:'GET',
             headers:{
-            Authorization: 'Client-ID 54f0e1fa426e72ebba349aaf676667faf8aef7f9d7d060503836d5e2f5ba7d15',
+            Authorization: 'Client-ID 9537c083326dcc052deccb63fdd7ba197a7f249b96f3eed6a6fd7d24a83b9b6b',
             },
         };
         return fetch(url, headers)
-            .then((res)=>res.json());
+            .then((res)=>res.json())
+            .catch((error) => {
+                console.log(error)
+            });
     }
 };
 module.exports = api;

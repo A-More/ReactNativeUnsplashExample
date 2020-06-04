@@ -2,26 +2,59 @@ import React, {Component} from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import curatedResource from '../api/curatedresource/CuratedResource';
 import CuratedItem from '../components/CuratedItem';
+import Toast, {DURATION} from 'react-native-easy-toast';
 
 export default class CuratedPhotos extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            page: 1,
             curated: [],
         }
     }
 
     componentDidMount() {
-        curatedResource.getCurated()
+        this.refs.toast.show('scroll up for more', DURATION.FOREVER);
+    }
+
+    getCuratedPhotos = () => {
+        curatedResource.getCurated(this.state.page)
             .then((res) => {
                 this.setState({
-                    curated: res,
+                    curated: [...this.state.curated, ...res],
                 })
             })
     }
 
+    loadMore = () => {
+        this.setState({
+                page: this.state.page + 1
+            }, () => {
+                this.getCuratedPhotos();
+            })
+    }
+
+    onScroll = () => {
+        this.refs.toast.close(1);
+    }
+
+    showToast = (flag) => {
+        if(flag === 1){
+            this.refs.toast.show('downloading...');
+        } else if(flag === 2){
+            this.refs.toast.show('image saved');
+        } else if(flag === 3){
+            this.refs.toast.show('setting wallpaper...');
+        } else if(flag === 4){
+            this.refs.toast.show('this image is now your wallpaper');
+        }
+    }
+
+
+
     render() {
+        // const{navigation}=this.props;
         return (
             <View style={styles.container}>
                 <FlatList style={styles.list}
@@ -30,9 +63,13 @@ export default class CuratedPhotos extends Component {
                               return item.id;
                           }}
                           renderItem={({item}) => {
-                              return <CuratedItem row={item}/>
+                              return <CuratedItem row={item} callback={this.showToast}/>
                           }}
+                          onEndReached={this.loadMore}
+                          onEndThreshold={7}
+                          onScrollBeginDrag={this.onScroll}
                 />
+                <Toast ref="toast"/>
             </View>
         )
     }
